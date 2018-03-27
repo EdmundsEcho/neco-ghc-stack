@@ -7,9 +7,16 @@ function! necoghc#diagnostics#report() abort
   echomsg 'Current filetype:' &l:filetype
 
   let l:executable = executable('ghc-mod')
-  echomsg 'ghc-mod is executable:' l:executable
+  let l:exe= 'ghc-mod'
+
+  if get(g:, 'necoghc_use_stack', 0)
+    let l:executable = executable('stack')
+    let l:exe = 'stack ghc-mod'
+  endif
+
+  echomsg l:exe . ' is executable: ' . l:executable
   if !l:executable
-    echomsg '  Your $PATH:' $PATH
+    echomsg '  Your $PATH does not include the binary:' $PATH
   endif
 
   echomsg 'omnifunc:' &l:omnifunc
@@ -23,10 +30,10 @@ function! necoghc#diagnostics#report() abort
     echomsg 'vimproc.vim: not installed'
   endtry
 
-  echomsg 'ghc-mod:' necoghc#ghc_mod_version()
+  echomsg  l:exe . ' version:' necoghc#ghc_mod_version()
 
   if &l:filetype !=# 'haskell'
-    call s:error('Run this command in the buffer opening a Haskell file')
+    call s:error('Run this command in a buffer with a Haskell file')
     return
   endif
   call necoghc#boot()
