@@ -511,7 +511,6 @@ endfunction "}}}
 
 function! necoghc#ghc_mod_version() abort "{{{
   let l:ret = s:system(s:ghc_mod_path + ['version'])
-  return l:ret
   return matchstr(l:ret, '\ghc-mod\%(.exe\)\?\s\+version\s\+\%(\d\+\.\)*\d\+')
 endfunction "}}}
 
